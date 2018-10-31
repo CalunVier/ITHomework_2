@@ -14,7 +14,7 @@ class User(models.Model):
     email = models.EmailField(verbose_name='Email')
     question = models.ForeignKey(QuestionList, on_delete=models.CASCADE)
     answer = models.CharField(max_length=50, verbose_name="Question")
-    head_picture_adress = models.CharField(max_length=200, default="")
+    head_picture_address = models.CharField(max_length=200, default="")
     permission_group = models.IntegerField(default=0, verbose_name="Permission Group")
     sign_up_time = models.TimeField(auto_now=True)
     last_login_time = models.TimeField(auto_now_add=True)
@@ -22,5 +22,13 @@ class User(models.Model):
     last_login_ip = models.GenericIPAddressField()
 
 
+class UserInfo(models.Model):
+    uid = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+    sex = models.IntegerField(choices=((1, 'man'), (2, 'female')), null=True)
+    phone_number = models.IntegerField(null=True)
+    profile = models.CharField(max_length=150, null=True)
 
 
+class LoginSession(models.Model):
+    uid = models.IntegerField()
+    login_key = models.CharField(max_length=32)

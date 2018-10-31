@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>找回密码</title>
+    </head>
+    <body>
+        <h1>找回密码！</h1><br/>
+{#        <p>请输入你的电子邮箱地址，稍后我们会发送电子邮件到您的邮箱，点击链接重置密码。</p><br/>#}
+{#        <form method="post">#}
+{#            {% csrf_token %}#}
+{#            <input type="text"/>#}
+{#            <input type="submit" value="提交">#}
+{#        </form>#}
+{#        因为找不到合适的邮件服务器而放弃#}
+        <form action="{% url "account:toRetrievePassword" %}" name="ss" method="post">
+            {% csrf_token %}
+            用户名：<input type="text" name="username" value={{ username }} ><input type="submit" name="getQuestion" value="获取问题"><br/>
+            密保问题：{{ question }}<br/>
+            答案：<input type="text" name="answer"/><br/>
+            新密码：<input type="password" name="newpwd"/><br/>
+            <input type="submit" value="提交">{{ result }}
+        </form>
+    </body>
+</html>

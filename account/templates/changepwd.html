@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改密码</title>
+{#    <script>#}
+{#        function conpwschecker() {#}
+{#            if(document.cp.newp.value == document.cp.cnp.value){#}
+{#                document.getElementById("msg").innerHTML = ""#}
+{#                document.cp.subbutten.disabled = false;#}
+{#            }else {#}
+{#                document.cp.subbutten.disabled = true;#}
+{#                document.getElementById("msg").innerHTML = "两次输入的密码不一致！"#}
+{#            }#}
+{#        }#}
+{#    </script>#}
+</head>
+<body>
+    <form action="{% url "account:ChangePassword" %}" name="cp" method="post" style="text-align: center">
+        {% csrf_token %}
+        用户名：{{ username }}<br/>
+        请输入旧密码：<input type="password" name="oldp"/><br/>
+        请输入新密码：<input type="password" name="newp"onblur="conpwschecker()"/><br/>
+        请确认新密码：<input type="password" name="cnp" onblur="conpwschecker()"/><span id="msg" style="color: red"></span><br/>{{ result }}
+        <input type="submit" value="提交", name="subbutten">
+    </form>
+</body>
+</html>

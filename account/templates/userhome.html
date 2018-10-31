@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>用户中心</title>
+</head>
+<body>
+<div style="background-color: deepskyblue">
+    <a href="" style="color: white;text-decoration: none">博客主页</a>
+    <a href="" style="color: white;text-decoration: none">文章列表</a>
+    <a href="" style="color: white;text-decoration: none">我的收藏</a>
+    <span style="float: right">欢迎,{{ UserName }}
+    <a href="{% url "account:UserHome" %}" style="padding-left: 5px">设置</a>
+    </span>
+</div>
+<div style="float: left;background-color: mediumturquoise; width: 18%">
+    <h3>分类</h3>
+    <span style="padding: 3px">for循环</span>
+</div>
+</body>
+</html>

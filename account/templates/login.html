@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="UTF-8">
+        <title>登陆</title>
+    </head>
+    <body>
+        <form action="{% url "account:Login" %}" method="post">
+            {% csrf_token %}
+            {{ login_form }}<br/>
+            <input type="submit" value="登陆"/>{{ result }}
+        </form>
+    </body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+</head>
+<body>
+所有用户信息<br/>
+{% for info in userInfo %}
+用户名:{{ info.username }}
+密码:{{ info.password }}
+电子邮箱：{{ info.email }}
+密保问题：{{ info.question }}
+答案：{{ info.answer }}<br/>
+{% endfor %}
+当前登陆的用户<br/>
+{% for user in loginedUser %}
+用户名:{{ user.username }}
+登陆时间:{{ user.login_time }}<br/>
+{% endfor %}
+</body>
+</html>
