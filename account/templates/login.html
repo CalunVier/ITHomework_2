@@ -7,8 +7,10 @@
     <body>
         <form action="{% url "account:Login" %}" method="post">
             {% csrf_token %}
-            {{ login_form }}<br/>
-            <input type="submit" value="登陆"/>{{ result }}
+            {{ login_form }}
+            <a href="{% url "account:ForgotPassword" %}" >忘记密码</a>
+            <br/>
+            <input type="submit" value="登陆"/>{{ message }}
         </form>
     </body>
 </html>

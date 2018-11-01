@@ -31,4 +31,4 @@ class UserInfo(models.Model):
 
 class LoginSession(models.Model):
     uid = models.IntegerField()
-    login_key = models.CharField(max_length=32)
+    login_key = models.CharField(max_length=40)

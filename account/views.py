@@ -5,11 +5,14 @@ import re
 import time
 from django.core.signing import BadSignature
 from account.models import User,LoginSession, QuestionList
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, ForgotPassword
+from .renders import temp_object, login_render
+from django.core import signing
 
 # Create your views here.
 # userInfo = [{"username": "root", "password": "123", "email": "admin@admin.com", "question": "rootQuestion", "answer": "rootAnswer"}]
 # login_status = []
+
 
 
 def login(request):
@@ -17,9 +20,12 @@ def login(request):
     if request.method == 'GET':
         s = request.GET.get('status')
         if s == '2':
-            return render(request, "login.html", {"result": "注册成功"})
+            return render(request, "login.html", {"message": "注册成功", 'login_form': LoginForm()})
         elif s == '3':
-            return render(request, "login.html", {"result": "密码修改成功"})
+            return render(request, "login.html", {"message": "密码修改成功", 'login_form': LoginForm()})
+        elif s == '4':
+            request.GET.keys()
+            return login_render(request, request.GET.keys())
         else:
             return render(request, "login.html", {'login_form': LoginForm()})
 
@@ -27,6 +33,7 @@ def login(request):
         # 获取输入表单信息
         # username = request.POST.get("username")
         # password = request.POST.get("password")
+        # form = LoginForm(request.POST)
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -37,7 +44,7 @@ def login(request):
                         now_time = str(time.time())
                         response.set_cookie("UID", f[0].uid)
                         response.set_signed_cookie("login_key", username, now_time)
-                        LoginSession(uid=f[0].uid, login_key=now_time).save()
+                        LoginSession(uid=f[0].uid, login_key=signing.get_cookie_signer(salt="login_key" + now_time).sign(username)).save()
                         return response
         return redirect(request, "login.html", {"result": "登陆失败"})
 
@@ -91,19 +98,12 @@ def register(request):
 
 
 def permission_checker(request):
-    uid = request.COOKIES.get("UID")
-    login_times = []
-    user = LoginSession.objects.filter(uid=uid)
-    if user:
-        for q in user:
-            try:
-                login_key = request.get_signed_cookie("login_key", salt=q.login_key)
-            except BadSignature:
-                login_key = ''
-            if login_key == User.objects.get(uid=uid).username:
-                return True
+    uid = request.COOKIES.get('UID')
+    session = LoginSession.objects.filter(uid=int(uid))
+    login_key = request.COOKIES.get('login_key')
+    if session.filter(login_key=login_key):
+        return True
     return False
-    # return True
 
 
 # def check_user(request):
@@ -115,7 +115,7 @@ def permission_checker(request):
 
 def user_home(request):
     if permission_checker(request):
-        return render(request, "userhome.html", {"userName": request.COOKIES.get('username')})
+        return render(request, "userhome.html", {"UserName": User.objects.get(uid=int(request.COOKIES.get('UID'))).username})
     else:
         return render(request, "Permission_Refused.html")
 
@@ -164,32 +164,46 @@ def change_pwd(request):
 
 def forgot_password(request):
     if request.method == 'GET':
-        status = request.GET.get('status')
-        if status == "1":
-            username = request.GET.get("username")
-            for info in userInfo:
-                if username == info["username"]:
-                    if info['question'] != "如不填写，将无法找回密码" and info['question'] != "":
-                        return render(request, "forgotpwd.html", {"username": username, "question": info["question"]})
-                    break
-            return render(request, "forgotpwd.html", {"question": "没有找到密保问题"})
-        elif status == "2":
-            return render(request, "forgotpwd.html", {"result": "找回失败"})
-        else:
-            return render(request, "forgotpwd.html")
-    else:
-        if request.POST.get("getQuestion"):
-            return redirect("../retrievePassword/?status=1&username={0}".format(request.POST.get("username")))
-        else:
-            username = request.POST.get("username")
-            answer = request.POST.get("answer")
-            for info in userInfo:
-                if username == info["username"]:
-                    if answer == info["answer"] and info['question'] != "如不填写，将无法找回密码" and info['question'] != "":
-                        info["password"] = request.POST.get("newpwd")
-                        return redirect('../login/?status=3')
-                    break
-            return redirect("../retrievePassword/?status=2")
+        # form = QuestionList()
+        return render(request, "forgotpwd.html", {'question': ForgotPassword()})
+    if request.method == 'POST':
+        form = ForgotPassword(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username=form.cleaned_data['username'])
+            if str(user.question.id) == form.cleaned_data['question'] and user.answer == form.cleaned_data['answer']:
+                user.password = form.cleaned_data['new_password']
+                user.save()
+                return redirect('../login/?status=3')
+        return redirect("../retrievePassword/?status=2")
+
+    # 完全看不懂这里的逻辑
+    # if request.method == 'GET':
+    #     status = request.GET.get('status')
+    #     if status == "1":
+    #         username = request.GET.get("username")
+    #         for info in userInfo:
+    #             if username == info["username"]:
+    #                 if info['question'] != "如不填写，将无法找回密码" and info['question'] != "":
+    #                     return render(request, "forgotpwd.html", {"username": username, "question": info["question"]})
+    #                 break
+    #         return render(request, "forgotpwd.html", {"question": "没有找到密保问题"})
+    #     elif status == "2":
+    #         return render(request, "forgotpwd.html", {"result": "找回失败"})
+    #     else:
+    #         return render(request, "forgotpwd.html")
+    # else:
+    #     if request.POST.get("getQuestion"):
+    #         return redirect("../retrievePassword/?status=1&username={0}".format(request.POST.get("username")))
+    #     else:
+    #         username = request.POST.get("username")
+    #         answer = request.POST.get("answer")
+    #         for info in userInfo:
+    #             if username == info["username"]:
+    #                 if answer == info["answer"] and info['question'] != "如不填写，将无法找回密码" and info['question'] != "":
+    #                     info["password"] = request.POST.get("newpwd")
+    #                     return redirect('../login/?status=3')
+    #                 break
+    #         return redirect("../retrievePassword/?status=2")
 
 
 # def retrieve_password(request):
@@ -224,26 +238,29 @@ def forgot_password(request):
 
 
 def logout(request):
-    to_logout(request)
+
     return redirect("../login/")
 
 
-def to_logout(request):
-    username = request.COOKIES.get("username")
-    login_times = []
-    for u in login_status:
-        if username == u['username']:
-            login_times.append(u["login_time"])
-    for t in login_times:
-        try:
-            login_key = request.get_signed_cookie("login_key", salt=t)
-        except BadSignature:
-            login_key = ''
-        if login_key == username:
-            for u in login_status:
-                if u["login_time"] == t:
-                    login_status.remove(u)
-                    return
+# def to_logout(request):
+#
+#     pass
+
+    # username = request.COOKIES.get("username")
+    # login_times = []
+    # for u in login_status:
+    #     if username == u['username']:
+    #         login_times.append(u["login_time"])
+    # for t in login_times:
+    #     try:
+    #         login_key = request.get_signed_cookie("login_key", salt=t)
+    #     except BadSignature:
+    #         login_key = ''
+    #     if login_key == username:
+    #         for u in login_status:
+    #             if u["login_time"] == t:
+    #                 login_status.remove(u)
+    #                 return
 
 
 def settings(request):

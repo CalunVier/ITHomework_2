@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Article List</title>
+</head>
+<body>
+{% for a in articles %}
+<div>
+    <a href="{{ a.address }}" style="text-decoration: none; color: deepskyblue">{{ a.name }}</a>
+    <hr style="background-color: darkgray;"/>
+</div>
+{% endfor %}
+</body>
+</html>

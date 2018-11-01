@@ -13,12 +13,9 @@
 {#            <input type="submit" value="提交">#}
 {#        </form>#}
 {#        因为找不到合适的邮件服务器而放弃#}
-        <form action="{% url "account:toRetrievePassword" %}" name="ss" method="post">
+        <form action="{% url "account:ForgotPassword" %}" name="ss" method="post">
             {% csrf_token %}
-            用户名：<input type="text" name="username" value={{ username }} ><input type="submit" name="getQuestion" value="获取问题"><br/>
-            密保问题：{{ question }}<br/>
-            答案：<input type="text" name="answer"/><br/>
-            新密码：<input type="password" name="newpwd"/><br/>
+            {{ question }}
             <input type="submit" value="提交">{{ result }}
         </form>
     </body>
