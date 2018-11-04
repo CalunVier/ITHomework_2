@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from .renders import article_list_render
+from .renders import ArticleListRender
 from .models import ArticlesList
 from account.models import User
 from .forms import NewArticleForm
@@ -13,14 +13,7 @@ def index(request):
 # 文章列表，一般作iframe
 def article_list(request, source):
     if request.method == 'GET':
-        if source == 'HomePage':
-            article_list_db = ArticlesList.objects.all()
-            article_list_db.reverse()
-            article_list_db = article_list_db[:10]
-            articles = []
-            for article in article_list_db:
-                articles.append({'name': article.article_name, 'aid': article.aid})
-            return article_list_render(request, articles)
+        return ArticleListRender(request, source).rendering()
 
 
 # 新文章
@@ -48,3 +41,11 @@ def article(request,aid):
         if art:
             return render(request, "article.html", {'title':art[0].article_name, 'content':art[0].content})
     return Http404()
+
+
+def comments(request,aid):
+    if request.method == 'GET':
+
+
+
+        return render(request, "comments.html")

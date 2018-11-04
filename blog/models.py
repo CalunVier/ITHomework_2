@@ -23,6 +23,7 @@ class ArticlesList(models.Model):
 
 
 class CommentList(models.Model):
+    content = models.CharField(max_length=250)
     auther = models.ForeignKey(User, on_delete=models.CASCADE)
     time = models.TimeField(auto_now=True)
     superior = models.ForeignKey(to='self')
