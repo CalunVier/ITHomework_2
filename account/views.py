@@ -14,7 +14,6 @@ from django.core import signing
 # login_status = []
 
 
-
 def login(request):
 
     if request.method == 'GET':
@@ -99,7 +98,11 @@ def register(request):
 
 def permission_checker(request):
     uid = request.COOKIES.get('UID')
-    session = LoginSession.objects.filter(uid=int(uid))
+    try:
+        uid = int(uid)
+    except BaseException:
+        return False
+    session = LoginSession.objects.filter(uid=uid)
     login_key = request.COOKIES.get('login_key')
     if session.filter(login_key=login_key):
         return True

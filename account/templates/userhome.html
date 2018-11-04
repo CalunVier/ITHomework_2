@@ -9,7 +9,7 @@
     <a href="" style="color: white;text-decoration: none">博客主页</a>
     <a href="" style="color: white;text-decoration: none">文章列表</a>
     <a href="" style="color: white;text-decoration: none">我的收藏</a>
-    <a href="" style="color: white;text-decoration: none">创建文章</a>
+    <a href="{% url "blog:NewArticle" %}" style="color: white;text-decoration: none">创建文章</a>
     <span style="float: right">
         欢迎,{{ UserName }}
         <a href="{% url "account:UserHome" %}" style="padding-left: 5px">设置</a>

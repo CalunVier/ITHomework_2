@@ -17,5 +17,7 @@ from django.conf.urls import url
 from blog import views
 
 urlpatterns = [
-    url(r'^articlelist/(.+)', views.article_list, name='ArticleList')
+    url(r'^articlelist/(.+)', views.article_list, name='ArticleList'),
+    url(r'^new_article/', views.new_article, name='NewArticle'),
+    url(r'^article/(.+)', views.article, name="Article")
 ]

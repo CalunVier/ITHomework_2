@@ -7,7 +7,7 @@
 <body>
 {% for a in articles %}
 <div>
-    <a href="{{ a.address }}" style="text-decoration: none; color: deepskyblue">{{ a.name }}</a>
+    <a href="{% url "blog:Article" a.aid%}" style="text-decoration: none; color: deepskyblue" target="_blank">{{ a.name }}</a>
     <hr style="background-color: darkgray;"/>
 </div>
 {% endfor %}

@@ -13,7 +13,7 @@ class ArticleGroups(models.Model):
 class ArticlesList(models.Model):
     aid = models.AutoField(primary_key=True, unique=True)
     article_name = models.CharField(max_length=60)
-    content = models.CharField(max_length=200)
+    content = models.CharField(max_length=500000)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(ArticleGroups, null=True, on_delete=models.CASCADE)
     issuing_time = models.TimeField(auto_now=True)
