@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import ArticlesList
 from account.models import User
+from django.http.response import Http404
 
 
 # def article_list_render(request, articles):
@@ -36,12 +37,26 @@ class ArticleListRender(Render):
             user = User.objects.get(uid=int(request.COOKIES.get('UID')))
             article_list_db = ArticlesList.objects.filter(author=user)
             article_list_db.reverse()
-            article_list_db = article_list_db[page,page+10]
+            article_list_db = article_list_db[page:page+10]
             articles = []
             for article in article_list_db:
                 articles.append({'name': article.article_name, 'aid': article.aid})
             self.dictionary['articles'] = articles
 
+
+class ArticleRender(Render):
+    def __init__(self, request, aid, dic={}):
+        super().__init__(request, 'article.html', dic)
+        # try:
+        art = ArticlesList.objects.get(aid=aid)
+        dic['title'] = art.article_name
+        dic['author'] = art.author.username
+        dic['issuing_time'] = art.issuing_time.isoformat()
+        dic['last_modified'] = art.last_modified.isoformat()
+        dic['content'] = art.content
+        self.dictionary = dic
+        # except BaseException:
+        #     self.rendering = lambda: Http404()
 
 
 # class CommentsRender(object):

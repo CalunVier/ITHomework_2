@@ -13,3 +13,7 @@ def login_render(request, *args):
         finally:
             pass
     return render(request, "login.html", c)
+
+
+def user_status(request):
+    pass

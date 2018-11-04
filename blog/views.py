@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, reverse
-from .renders import ArticleListRender
+from .renders import ArticleListRender, ArticleRender
 from .models import ArticlesList
 from account.models import User
 from .forms import NewArticleForm
 from django.http.response import Http404
+import re
 
 
 def index(request):
@@ -31,21 +32,26 @@ def new_article(request):
 
 
 # 文章页面
-def article(request,aid):
+def article(request, aid):
     if request.method == 'GET':
         try:
             aid = int(aid)
         except TypeError:
             return Http404()
-        art = ArticlesList.objects.filter(aid=aid)
-        if art:
-            return render(request, "article.html", {'title':art[0].article_name, 'content':art[0].content})
+        # art = ArticlesList.objects.filter(aid=aid)
+        # if art:
+        return ArticleRender(request, aid).rendering()
     return Http404()
 
 
 def comments(request,aid):
     if request.method == 'GET':
 
-
-
         return render(request, "comments.html")
+
+
+def delete_article(request):
+    if request.method == "GET":
+        aid = int(re.match(r'.+blog/article/(\d+)', request.META['HTTP_REFERER']).group(1))
+        ArticlesList.objects.filter(aid=aid).delete()
+        return redirect(reverse("account:UserHome"))
