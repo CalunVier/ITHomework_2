@@ -9,12 +9,16 @@
         <span>作者:{{ author }}</span>
         <span>发表时间:{{ issuing_time }}</span>
         <span>最后修改:{{ last_modified }}</span>
-
-        <a href="{% url "blog:Delete" %}" style="float: right">删除</a>
-        <a href="" style="float: right; padding-right: 3px">编辑</a>
+        <span style="float: right">
+        <a href="">收藏</a>
+        {% if True %}
+            <a href="" >编辑</a>
+            <a href="{% url "blog:Delete" %}" style="padding-right: 3px">删除</a>
+        {% endif %}
+        </span>
     </div>
     <h1 style="text-align: center">{{ title }}</h1>
-    <p>{{ content }}</p>
+    <pre>{{ content|safe }}</pre>
     <iframe></iframe>
 </body>
 </html>

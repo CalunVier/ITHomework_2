@@ -15,5 +15,4 @@ def login_render(request, *args):
     return render(request, "login.html", c)
 
 
-def user_status(request):
-    pass
+

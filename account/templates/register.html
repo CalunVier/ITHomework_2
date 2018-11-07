@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>注册</title>
+    </head>
+    <body>
+
+    <form action="{% url "account:Register" %}" style="" method="post" name="reg">
+        {% csrf_token %}
+        <div style=" width: min-content">{{ reg_form }}</div>
+        <input type="submit" value="注册"  name="regbutten">{{ result }}
+    </form>
+
+
+    </body>
+</html>

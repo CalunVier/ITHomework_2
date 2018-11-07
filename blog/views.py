@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from .renders import ArticleListRender, ArticleRender
+from .renders import ArticleListRender, ArticleRender, login_status
 from .models import ArticlesList
 from account.models import User
 from .forms import NewArticleForm
@@ -7,14 +7,15 @@ from django.http.response import Http404
 import re
 
 
+
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'index.html', {'status': login_status(request)})
 
 
 # 文章列表，一般作iframe
 def article_list(request, source):
     if request.method == 'GET':
-        return ArticleListRender(request, source).rendering()
+        return ArticleListRender(request, source).init_dictionary().rendering()
 
 
 # 新文章
@@ -26,6 +27,8 @@ def new_article(request):
     if request.method == 'POST':
         form = NewArticleForm(request.POST)
         if form.is_valid():
+            print(form.cleaned_data['title'])
+            print(form.cleaned_data['content'])
             ArticlesList(article_name=form.cleaned_data['title'], content=form.cleaned_data['content'], author=user).save()
             return redirect(reverse("account:UserHome"))
         return render(request, "new_article.html", {'new_article_form': form, 'message': '提交失败'})
