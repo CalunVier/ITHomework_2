@@ -13,7 +13,7 @@
         <span style="float: right">
         <a href="{% url "blog:LikeArticle" aid %}">收藏</a>
         {% if edit_permission %}
-            <a href="" >编辑</a>
+            <a href="{% url "blog:EditArticle" aid %}">编辑</a>
         {% endif %}
         {% if delete_permission %}
             <a href="{% url "blog:Delete" %}" style="padding-right: 3px">删除</a>
@@ -21,7 +21,7 @@
         </span>
     </div>
     <h1 style="text-align: center">{{ title }}</h1>
-    <pre>{{ content }}{{ aid }}</pre>
+    <pre>{{ content }}</pre>
 
     <form action="{% url "blog:CommentsList" aid%}" id="comment" method="post">
         {% csrf_token %}

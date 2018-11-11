@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^article/(.+)', views.article, name="Article"),
     url(r'^comment/([^/]+)(?:/(\d*))?', views.comments, name='CommentsList'),
     url(r'^delete/$', views.delete_article, name="Delete"),
-    url(r'^like/(\d+)', views.like_article, name="LikeArticle")
+    url(r'^like/(\d+)', views.like_article, name="LikeArticle"),
+    url(r'^editarticle/(.+)', views.edit_article, name="EditArticle")
 ]

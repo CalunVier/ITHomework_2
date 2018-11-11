@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EditArticle</title>
+</head>
+<body>
+<form action="{% url "blog:EditArticle" aid %}" id="edit_form" method="post">
+    {% csrf_token %}
+    标题:<input type="text" value="{{ title }}" name="title" /> 文章分类：<input type="text" value="{{ group }}" /><br/>
+    内容：<textarea form="edit_form" name="content" >{{ content }}</textarea><br/>
+    可见度:
+    <select form="edit_form" name="visibility">
+        <option value=0>Public</option>
+        <option value=1>Protect</option>
+        <option value=2>Private</option>
+    </select><br/>
+{#    谁能看：<input type="text" name="who_can_see" value="{{ who_can_see }}" /><br/>#}
+{#    谁能修改：<input type="text" name="who_can_edit" value="{{ who_can_edit }}" /><br/>#}
+{#    谁不能看：<input type="text" name="who_can_not_see" value="{{ who_can_not_see }}" /><br/>#}
+    <input type="submit" value="提交"/>
+</form>
+</body>
+</html>

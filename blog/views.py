@@ -45,7 +45,7 @@ def new_article(request):
                 group = form.cleaned_data['group']
                 if not group:       # 判断是否填写group，若未填写，则默认default
                     group = 'Default'
-                    if not ArticleGroups.objects.filter(group_name=group):      # 检查组是否存在
+                    if not ArticleGroups.objects.filter(owner=user, group_name=group):      # 检查组是否存在
                         ArticleGroups(group_name=group, owner=user).save()
                 # 将文章写入数据库
                 the_new_article = ArticlesList(article_name=form.cleaned_data['title'],
@@ -160,3 +160,41 @@ def like_article(request, aid):
         return redirect('/blog/article/{0}'.format(aid))
 
 
+def edit_article(request, aid):
+    try:
+        art = ArticlesList.objects.get(aid=int(aid))
+    except BaseException:
+        return Http404
+    if Permission(request).check_login().check_permission_blog(art, 'edit'):
+        user = User.objects.get(uid=request.COOKIES.get('UID'))
+        if not art.group:
+            art.group = ArticleGroups.objects.get(owner=user, group_name='Default')
+        if request.method == 'GET':
+            return render(request, "edit_article.html", {'title': art.article_name,
+                                                         'content': art.content,
+                                                         'Visibility': art.Visibility,
+                                                         'group': art.group.group_name,
+                                                         # 'who_can_see': art.whocansee,
+                                                         # 'who_can_edit': art.whocanedit,
+                                                         # 'who_can_not_see': art.whocannotsee,
+                                                         'aid': aid
+                                                         })
+        if request.method == 'POST':
+            if request.POST.get('title') and art.article_name != request.POST.get('title'):
+                art.article_name = request.POST.get('title')
+            if request.POST.get('content') and art.content != request.POST.get('content'):
+                art.content = request.POST.get('content')
+            if art.Visibility != request.POST.get('visibility'):
+                art.Visibility = request.POST.get('visibility')
+
+            group = request.POST.get('group')
+            if not group:  # 判断是否填写group，若未填写，则默认default
+                group = 'Default'
+                if not ArticleGroups.objects.filter(owner=user, group_name=group):  # 检查组是否存在
+                    ArticleGroups(group_name=group, owner=user).save()
+            if art.group != ArticleGroups.objects.get(owner=user, group_name=group):
+                art.group = ArticleGroups.objects.get(owner=user, group_name=group)
+            art.save()
+        return redirect('/blog/article/{0}'.format(aid))
+    else:
+        return permission_dead(request)

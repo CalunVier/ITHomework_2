@@ -20,6 +20,9 @@ class ArticlesList(models.Model):
     last_modified = models.DateTimeField(auto_now_add=True)
     permissions = models.CharField(default="", max_length=1000, verbose_name="Permissions")
     Visibility = models.IntegerField(default=0, choices=((0, 'Public'), (1, 'Protected'), (2, 'Private')))
+    whocansee = models.CharField(null=True, max_length=100, verbose_name='Who Can See')
+    whocannotsee = models.CharField(null=True, max_length=100, verbose_name='Who Can Not See')
+    whocanedit = models.CharField(null=True, max_length=100, verbose_name='Who Can Edit')
 
 
 class CommentList(models.Model):
