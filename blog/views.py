@@ -6,6 +6,7 @@ from .forms import NewArticleForm
 from django.http.response import Http404
 from permission.permission import Permission, user_permission_add
 import re
+import datetime
 
 
 def index(request):
@@ -51,8 +52,7 @@ def new_article(request):
                 the_new_article = ArticlesList(article_name=form.cleaned_data['title'],
                                                content=form.cleaned_data['content'],
                                                author=user,
-                                               Visibility=form.cleaned_data["visibility"],
-                                               group=ArticleGroups.objects.get(owner=user, group_name=group))
+                                               Visibility=form.cleaned_data["visibility"])
                 the_new_article.save()
 
                 # 写入可见权限
@@ -88,9 +88,10 @@ def article(request, aid):
         except BaseException:   # 找不到就404
             return Http404()
         # 检查Visible权限和view权限
+
         if Permission(request, logged=True).check_permission_blog(art, 'view').result():
             print("blog.views.article():aid:", aid)
-            return ArticleRender(request, aid, {'aid': aid}).rendering()      #渲染
+            return ArticleRender(request, aid, {'aid': aid, 'logged': Permission(request).check_login().logged}).rendering()      # 渲染
         else:
             return render(request, "Permission_Refused.html")
     return Http404()        # 找不到就404
@@ -111,6 +112,7 @@ def comments(request, aid, page):
         return CommentsListRender(request).init_dictionary(ArticlesList.objects.get(aid=aid), page).rendering()
     if request.method == 'POST':
         print('blog.views.comments():POST')
+        art = None
         try:        # 尝试获取article model对象
             art = ArticlesList.objects.get(aid=aid)
         except ArticlesList.DoesNotExist:
@@ -194,6 +196,7 @@ def edit_article(request, aid):
                     ArticleGroups(group_name=group, owner=user).save()
             if art.group != ArticleGroups.objects.get(owner=user, group_name=group):
                 art.group = ArticleGroups.objects.get(owner=user, group_name=group)
+            art.last_modified = datetime.datetime.now()
             art.save()
         return redirect('/blog/article/{0}'.format(aid))
     else:

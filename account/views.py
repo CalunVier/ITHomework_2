@@ -51,7 +51,7 @@ def login(request):
                     user[0].last_login_ip = request.META['REMOTE_ADDR']
                     user[0].save()
                     return response
-        return render(request, "login.html", {"result": "登陆失败", 'login_form': LoginForm()})
+        return render(request, "login.html", {"message": "登陆失败", 'login_form': LoginForm()})
 
 
 def register(request):
@@ -83,19 +83,6 @@ def register(request):
                 return redirect(reverse("account:Login"))
 
         return render(request, 'register.html', {"result": '注册失败', 'reg_form': form})
-
-
-# def permission_checker(request):
-#     uid = request.COOKIES.get('UID')
-#     try:
-#         uid = int(uid)
-#     except TypeError:
-#         return False
-#     session = LoginSession.objects.filter(uid=uid)
-#     login_key = request.COOKIES.get('login_key')
-#     if session.filter(login_key=login_key):
-#         return True
-#     return False
 
 
 def user_home(request, source):

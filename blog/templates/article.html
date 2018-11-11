@@ -21,15 +21,16 @@
         </span>
     </div>
     <h1 style="text-align: center">{{ title }}</h1>
-    <pre>{{ content }}</pre>
-
-    <form action="{% url "blog:CommentsList" aid%}" id="comment" method="post">
-        {% csrf_token %}
-        评论:<br/>
-        <textarea form="comment" name="comment_content" style="width: 90%; height: 100px"></textarea>
-        <input type="submit" value="提交" name="issue_comment_submit" /> {{ comment_submit_message }}
-    </form>
-
-    <iframe src="{% url "blog:CommentsList" aid %}" style="width: 100%; height: 625px"></iframe>
+    <pre>{{ content }}</pre><br/>
+    <hr/><br/>
+    评论:<br/>
+    {% if logged %}
+        <form action="{% url "blog:CommentsList" aid%}" id="comment" method="post">
+            {% csrf_token %}
+            <textarea form="comment" name="comment_content" style="width: 90%; height: 100px"></textarea>
+            <input type="submit" value="提交" name="issue_comment_submit" /> {{ comment_submit_message }}
+        </form>
+    {% endif %}
+    <iframe src="{% url "blog:CommentsList" aid %}" frameborder="0" style="width: 100%; height: 625px"></iframe>
 </body>
 </html>
