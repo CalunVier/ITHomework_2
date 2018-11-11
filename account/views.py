@@ -179,13 +179,16 @@ def logout(request):
 
 
 def settings(request):
-    if request.method == 'GET':
-        return render(request, "settings.html", {'form': UserSettingForm()})
-    if request.method == 'POST':
-        form = UserSettingForm(request.POST)
-        if form.is_valid():
-            UserInfo(sex=form.cleaned_data['sex'],
-                     phone_number=form.cleaned_data['phone_number'],
-                     profile=form.cleaned_data['profile']).save()
-        return redirect(reverse("account:UserHome"))
+    if Permission(request).check_login().result():
+        if request.method == 'GET':
+            return render(request, "settings.html", {'form': UserSettingForm()})
+        if request.method == 'POST':
+            form = UserSettingForm(request.POST)
+            user = User.objects.get(uid=int(request.COOKIES.get('UID')))
+            if form.is_valid():
+                UserInfo(uid=user,
+                         sex=form.cleaned_data['sex'],
+                         phone_number=form.cleaned_data['phone_number'],
+                         profile=form.cleaned_data['profile']).save()
+            return redirect(reverse("account:UserHome"))
 
