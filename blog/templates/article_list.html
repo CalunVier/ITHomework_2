@@ -8,8 +8,21 @@
 {% for a in articles %}
 <div>
     <a href="{% url "blog:Article" a.aid%}" style="text-decoration: none; color: deepskyblue" target="_blank">{{ a.name }}</a>
-    <hr style="background-color: darkgray;"/>
+    <hr style="background-color: blue;"/>
 </div>
 {% endfor %}
+<div style="text-align: right">
+    {% if pages|length > 1 %}
+        {% for p in pages %}
+            <a href="{% url "blog:ArticleList" source p %}">
+                {% if p == page %}
+                    "{{ p }}"
+                {% else %}
+                    {{ p }}
+                {% endif %}
+            </a>
+        {% endfor %}
+    {% endif %}
+</div>
 </body>
 </html>

@@ -7,21 +7,21 @@
 <body>
 <div style="background-color: deepskyblue">
     <a href="{% url "Index" %}" style="color: white;text-decoration: none">博客主页</a>
-    <a href="" style="color: white;text-decoration: none">文章列表</a>
-    <a href="" style="color: white;text-decoration: none">我的收藏</a>
+    <a href="{% url "account:UserHome" 'Favourite' %}" style="color: white;text-decoration: none">我的收藏</a>
     <a href="{% url "blog:NewArticle" %}" style="color: white;text-decoration: none">创建文章</a>
-    <span style="float: right">
-        欢迎,{{ UserName }}
-        <a href="{% url "account:UserHome" %}" style="padding-left: 5px">设置</a>
-        <a href="{% url "account:Login" %}" style="padding-left: 5px">退出</a>
-    </span>
+    {{ login_status|safe }}
 </div>
 <div style="float: left;background-color: mediumturquoise; width: 18%; height:500px ">
     <h3>分类</h3>
-    <span style="padding: 3px">for循环</span>
+    <a href="{% url "account:UserHome" 0 %}">all</a><br/>
+    <span style="padding: 3px">
+        {% for g in article_group %}
+            <a href="{% url "account:UserHome" g.gid %}">{{ g.group_name }}</a><br/>
+        {% endfor %}
+    </span>
 </div>
-<div style="background-color: darkgray">
-    <iframe src="{% url "blog:ArticleList" "UserHome" %}" style="width: 81%; height: 500px"></iframe>
+<div style="background-color: gray">
+    <iframe src="{% url "blog:ArticleList" source %}" style="width: 81%; height: 500px"></iframe>
 </div>
 </body>
 </html>

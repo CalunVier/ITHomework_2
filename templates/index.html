@@ -5,18 +5,15 @@
     <title>博客</title>
 </head>
 <body>
-{#    {{ status|safe }}#}
-<a href=\"account\register\" style="float: right;font-size: 12px">注册</a>
-                <a href=\"account\login\" style="float: right;font-size: 12px;padding-right: 3px">登陆</a>
+    {{ status|safe }}
     <div style="color: deepskyblue;text-align: center;padding: 5px"><h1>博客</h1></div>
     <nav style="background-color: deepskyblue;text-align: center;color: white">
         <a href="" style="color: white;text-decoration: none;padding: 5px" target="_blank" >所有文章</a>
         <a href="" style="color: white;text-decoration: none;padding: 5px" target="_blank">分类</a>
         <a href="{% url 'account:UserHome' %}" style="color: white;text-decoration: none;padding: 5px" target="_blank">个人主页</a>
     </nav>
-    <div style="background-color: darkgray">
-        <iframe src="{% url "blog:ArticleList" "Index" %}" style="width: 100%; height: 1000px"></iframe>
-
+    <div style="background-color: gray; height: 1000px">
+        <iframe src="{% url "blog:ArticleList" "Index" %}" onclick="reInitIframeHeight()" id="article_list" style="width: 100%; height:1000px"></iframe>
     </div>
 </body>
 </html>

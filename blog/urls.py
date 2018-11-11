@@ -17,8 +17,10 @@ from django.conf.urls import url
 from blog import views
 
 urlpatterns = [
-    url(r'^articlelist/(.+)', views.article_list, name='ArticleList'),
+    url(r'^articlelist/([^/]+)(?:/(\d*))?', views.article_list, name='ArticleList'),
     url(r'^new_article/', views.new_article, name='NewArticle'),
     url(r'^article/(.+)', views.article, name="Article"),
-    url(r'^delete/$', views.delete_article, name="Delete")
+    url(r'^comment/([^/]+)(?:/(\d*))?', views.comments, name='CommentsList'),
+    url(r'^delete/$', views.delete_article, name="Delete"),
+    url(r'^like/(\d+)', views.like_article, name="LikeArticle")
 ]

@@ -13,3 +13,5 @@ class PermissionGroup(models.Model):
 class UserPermission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Permission's Owner")
     permission = models.CharField(max_length=200, verbose_name="Permission")
+    rule = models.IntegerField(default=0, verbose_name='Rule')
+    # rule 0为同意，1为不同意

@@ -8,6 +8,7 @@
     <form action="" method="post">
         {% csrf_token %}
         {{ new_article_form }}<br/>
+
         <input type="submit" value="提交">{{ message }}
     </form>
 </body>

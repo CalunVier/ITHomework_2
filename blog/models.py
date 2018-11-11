@@ -6,8 +6,8 @@ from account.models import User
 
 class ArticleGroups(models.Model):
     group_name = models.CharField(max_length=50)
-    prossessor = models.ForeignKey(User, on_delete=models.CASCADE)
-    Visibility = models.IntegerField(choices=((0, 'Public'), (1, 'Protected'), (2, 'Private')))
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    Visibility = models.IntegerField(choices=((0, 'Public'), (1, 'Protected'), (2, 'Private')), default=0)
 
 
 class ArticlesList(models.Model):
@@ -23,7 +23,8 @@ class ArticlesList(models.Model):
 
 
 class CommentList(models.Model):
+    article = models.ForeignKey(ArticlesList, on_delete=models.CASCADE)
     content = models.CharField(max_length=250)
-    auther = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now=True)
-    superior = models.ForeignKey(to='self')
+    superior = models.ForeignKey(to='self', null=True)

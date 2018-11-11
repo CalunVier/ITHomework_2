@@ -28,3 +28,9 @@ class ForgotPassword(forms.Form):
     question = forms.ChoiceField(choices=get_question(), label='密保问题')
     answer = forms.CharField(max_length=40, min_length=2, label='答案')
     new_password = forms.CharField(16, 3, widget=forms.PasswordInput, label='新密码')
+
+
+class UserSettingForm(forms.Form):
+    sex = forms.ChoiceField(choices=((1, 'man'), (2, 'female')), required=False, label="性别")
+    phone_number = forms.IntegerField(required=False, label="电话号码")
+    profile = forms.CharField(required=False, widget=forms.Textarea, label="个人简介")

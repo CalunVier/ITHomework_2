@@ -1,5 +1,4 @@
 from django.db import models
-from permission.models import PermissionGroup
 import datetime
 
 # Create your models here.
@@ -19,7 +18,7 @@ class User(models.Model):
     question = models.ForeignKey(QuestionList, on_delete=models.CASCADE, verbose_name='Safe Question')
     answer = models.CharField(max_length=50, verbose_name="Safe Answer")
     head_picture_address = models.CharField(max_length=200, default="", verbose_name="Head Picture")
-    permission_group = models.ForeignKey(PermissionGroup, null=True, on_delete=models.CASCADE, verbose_name="Permission Group")
+    permission_group = models.ForeignKey('permission.PermissionGroup', models.CASCADE, null=True, verbose_name="Permission Group")
     sign_up_time = models.DateTimeField(auto_now=True, verbose_name="Sign Up Time")
     last_login_time = models.DateTimeField(auto_now_add=True, verbose_name="Last Login Time")
     sign_up_ip = models.GenericIPAddressField(verbose_name="Sign Up IP")
@@ -37,10 +36,10 @@ class UserInfo(models.Model):
 # Session
 class LoginSession(models.Model):
     uid = models.IntegerField()
-    login_key = models.CharField(max_length=40)
+    login_key = models.CharField(max_length=100)
     login_time = models.DateTimeField(auto_now_add=True)
 
-    # def fresh(self):
-    #     one_hour_ago = datetime.datetime.now()-datetime.timedelta(hours=1)
-    #     self.objects.filter(login_time__lt='{0}-{1}-{2}'.format(one_hour_ago.year))
 
+class UserFavoriteArticles(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
+    article = models.ForeignKey('blog.ArticlesList', on_delete=models.CASCADE, verbose_name='Article')

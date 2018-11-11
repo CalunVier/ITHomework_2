@@ -5,20 +5,31 @@
     <title>{{ title }}</title>
 </head>
 <body>
+    <div>{{ login_status|safe }}</div><br/>
     <div style="background-color: deepskyblue">
         <span>作者:{{ author }}</span>
         <span>发表时间:{{ issuing_time }}</span>
         <span>最后修改:{{ last_modified }}</span>
         <span style="float: right">
-        <a href="">收藏</a>
-        {% if True %}
+        <a href="{% url "blog:LikeArticle" aid %}">收藏</a>
+        {% if edit_permission %}
             <a href="" >编辑</a>
+        {% endif %}
+        {% if delete_permission %}
             <a href="{% url "blog:Delete" %}" style="padding-right: 3px">删除</a>
         {% endif %}
         </span>
     </div>
     <h1 style="text-align: center">{{ title }}</h1>
-    <pre>{{ content|safe }}</pre>
-    <iframe></iframe>
+    <pre>{{ content }}{{ aid }}</pre>
+
+    <form action="{% url "blog:CommentsList" aid%}" id="comment" method="post">
+        {% csrf_token %}
+        评论:<br/>
+        <textarea form="comment" name="comment_content" style="width: 90%; height: 100px"></textarea>
+        <input type="submit" value="提交" name="issue_comment_submit" /> {{ comment_submit_message }}
+    </form>
+
+    <iframe src="{% url "blog:CommentsList" aid %}" style="width: 100%; height: 625px"></iframe>
 </body>
 </html>

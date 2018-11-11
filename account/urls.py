@@ -21,8 +21,7 @@ urlpatterns = [
     url(r'^register/', views.register, name='Register'),
     url(r'changePassword/', views.change_pwd, name='ChangePassword'),
     url(r'forgotPassword/', views.forgot_password, name='ForgotPassword'),
-    url(r'^userHome/', views.user_home, name='UserHome'),
-    url(r'^settings/', views.settings, name='Settings')
-    # url(r)
-    # url(r'resetPassword/'),
+    url(r'^userHome/(?:(.+))?', views.user_home, name='UserHome'),
+    url(r'^settings/', views.settings, name='Settings'),
+    url(r'^logout/$', views.logout, name='Logout')
 ]
